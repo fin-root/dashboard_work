@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { query } from '../../../lib/db';
+import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 
 export async function POST(request: Request) {
@@ -10,11 +10,14 @@ export async function POST(request: Request) {
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Store user with hashed password
-        await query(
-            'INSERT INTO users (email, password, username) VALUES ($1, $2, $3)',
-            [email, hashedPassword, username]
-        );
+        // Store user with hashed password using Prisma
+        const user = await prisma.Users.create({
+            data: {
+                email,
+                username,
+                password_hash: hashedPassword,
+            },
+        });
 
         return NextResponse.json({ message: 'User created successfully' });
 

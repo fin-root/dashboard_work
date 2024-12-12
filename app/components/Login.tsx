@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '../context/UserContext';
 import styles from './Login.module.css';
+import Link from 'next/link';
 
 export default function Login() {
   const router = useRouter();
@@ -94,6 +95,13 @@ export default function Login() {
             <button type="submit" className={styles.button}>
               Sign in
             </button>
+          </div>
+          
+          <div className={styles.registerLink}>
+            Don't have an account?{' '}
+            <Link href="/register">
+              Register here
+            </Link>
           </div>
         </form>
       </div>

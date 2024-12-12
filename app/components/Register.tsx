@@ -1,14 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import styles from './Login.module.css'; // We can reuse the Login styles
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import styles from './Login.module.css';
 
 export default function Register() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     username: '',
   });
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,10 +31,11 @@ export default function Register() {
         throw new Error(data.error || 'Registration failed');
       }
 
-      // Handle successful registration (e.g., redirect to login)
-      console.log('Registration successful:', data);
+      // After successful registration, redirect to login
+      router.push('/');
       
     } catch (error) {
+      setError(error instanceof Error ? error.message : 'Registration failed');
       console.error('Registration error:', error);
     }
   };
@@ -49,6 +54,7 @@ export default function Register() {
         <div>
           <h2 className={styles.title}>Create an account</h2>
         </div>
+        {error && <div className={styles.error}>{error}</div>}
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
             <div>
@@ -102,6 +108,13 @@ export default function Register() {
             <button type="submit" className={styles.button}>
               Register
             </button>
+          </div>
+          
+          <div className={styles.loginLink}>
+            Already have an account?{' '}
+            <Link href="/">
+              Sign in here
+            </Link>
           </div>
         </form>
       </div>
